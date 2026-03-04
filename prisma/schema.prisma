@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//
+// ENUMS
+//
+
+enum StatusUsuario {
+  ATIVO
+  INATIVO
+  BLOQUEADO
+}
+
+enum StatusAgendamento {
+  AGENDADO
+  CONFIRMADO
+  CANCELADO
+  CONCLUIDO
+}
+
+enum StatusQuadra {
+  ATIVA
+  MANUTENCAO
+  INATIVA
+}
+
+//
+// TIPO USUARIO
+//
+
+model tiu_tipo_usuario {
+  tiu_id    Int      @id @default(autoincrement())
+  tiu_nome  String
+  createdAt DateTime @default(now())
+
+  usuarios usu_usuario[]
+}
+
+//
+// USUARIO
+//
+
+model usu_usuario {
+  usu_id        Int           @id @default(autoincrement())
+  usu_nome      String
+  usu_email     String        @unique
+  usu_telefone  String?
+  usu_senhaHash String
+  usu_cpf       String?       @unique
+  usu_status    StatusUsuario @default(ATIVO)
+  createdAt     DateTime      @default(now())
+
+  id_tipo_usuario  Int
+  tiu_tipo_usuario tiu_tipo_usuario @relation(fields: [id_tipo_usuario], references: [tiu_id])
+
+  aulas        tia_tipo_aula[]   @relation("ProfessorAulas")
+  agendamentos age_agendamento[]
+
+  @@index([id_tipo_usuario])
+}
+
+//
+// QUADRA
+//
+
+model qua_quadra {
+  qua_id     Int          @id @default(autoincrement())
+  qua_nome   String
+  qua_status StatusQuadra @default(ATIVA)
+  createdAt  DateTime     @default(now())
+
+  agendamentos age_agendamento[]
+}
+
+//
+// TIPO AULA (SERVIÇO)
+//
+
+model tia_tipo_aula {
+  tia_id         Int      @id @default(autoincrement())
+  tia_nome       String
+  tia_modalidade String?
+  tia_valor      Decimal  @db.Decimal(10, 2)
+  createdAt      DateTime @default(now())
+
+  id_professor Int
+  professor    usu_usuario @relation("ProfessorAulas", fields: [id_professor], references: [usu_id])
+
+  agendamentos age_agendamento[]
+
+  @@index([id_professor])
+}
+
+//
+// AGENDAMENTO
+//
+
+model age_agendamento {
+  age_id          Int               @id @default(autoincrement())
+  age_data_inicio DateTime
+  age_data_fim    DateTime
+  age_status      StatusAgendamento @default(AGENDADO)
+  createdAt       DateTime          @default(now())
+
+  id_usuario Int
+  usuario    usu_usuario @relation(fields: [id_usuario], references: [usu_id])
+
+  id_quadra Int
+  quadra    qua_quadra @relation(fields: [id_quadra], references: [qua_id])
+
+  id_tipo_aula Int?
+  tipoAula     tia_tipo_aula? @relation(fields: [id_tipo_aula], references: [tia_id])
+
+  @@index([id_quadra])
+  @@index([id_usuario])
+  @@index([age_data_inicio, age_data_fim])
+}
