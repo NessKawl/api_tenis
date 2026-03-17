@@ -1,12 +1,12 @@
-import { IsString, IsNotEmpty, MinLength, IsNumber, IsEnum } from 'class-validator';
+import { IsDateString, IsString, IsNotEmpty, MinLength, IsNumber, IsEnum } from 'class-validator';
 import { StatusAgendamento } from '@prisma/client';
 
 export class CreateAgendamentoDto {
-    @IsString()
+    @IsDateString()
     @IsNotEmpty()
     age_data_inicio: string;
 
-    @IsString()
+    @IsDateString()
     @IsNotEmpty()
     age_data_fim: string;
 

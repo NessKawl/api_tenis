@@ -9,7 +9,11 @@ export class AgendamentoService {
 
     async createAgendamento(data: CreateAgendamentoDto): Promise<age_agendamento> {
         return this.prismaService.age_agendamento.create({
-            data,
+            data: {
+                ...data,
+                age_data_inicio: new Date(data.age_data_inicio),
+                age_data_fim: new Date(data.age_data_fim)
+            }
         })
     }
 
