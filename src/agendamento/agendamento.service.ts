@@ -20,5 +20,15 @@ export class AgendamentoService {
     async findAllAgendamentos(): Promise<age_agendamento[]> {
         return this.prismaService.age_agendamento.findMany()
     }
+
+    // async buscaAgendamentoStatus(status: string) {
+    //     return this.prismaService.age_agendamento.findMany({
+    //         where: {
+    //             age_status: {
+    //                 contains: status,
+    //             }
+    //         }
+    //     })
+    // }
 }
 

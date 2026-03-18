@@ -3,6 +3,7 @@ import { usu_usuario } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class UsuarioService {
@@ -12,11 +13,11 @@ export class UsuarioService {
     async createUser(data: CreateUserDto): Promise<usu_usuario> {
 
         const usuarioExistente = await this.prismaService.usu_usuario.findUnique({
-            where: { usu_cpf: data.usu_cpf }
+            where: { usu_email: data.usu_email }
         });
 
         if (usuarioExistente) {
-            throw new ConflictException('Telefone já cadastrado');
+            throw new ConflictException('Usuário já cadastrado');
         }
 
         const hashPassword = await bcrypt.hash(data.usu_senhaHash, 10);
@@ -33,6 +34,20 @@ export class UsuarioService {
 
     async findAllUsers(): Promise<usu_usuario[]> {
         return this.prismaService.usu_usuario.findMany()
+    }
+
+    async findOneByEmail(usu_email: string) {
+        return this.prismaService.usu_usuario.findUnique({
+            where: { usu_email }
+        })
+    }
+
+    async findProfessor(): Promise<usu_usuario[]> {
+        return this.prismaService.usu_usuario.findMany({
+            where: {
+                id_tipo_usuario: 5,
+            }
+        })
     }
 
 }

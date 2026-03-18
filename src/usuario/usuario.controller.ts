@@ -12,6 +12,11 @@ export class UsuarioController {
         return this.usuarioService.findAllUsers()
     }
 
+    @Get('professor')
+    async findProfessor(): Promise<usu_usuario[]> {
+        return this.usuarioService.findProfessor()
+    }
+
     @Post('register')
     async createUser(@Body() createUserDto: CreateUserDto) {
         return this.usuarioService.createUser(createUserDto)
