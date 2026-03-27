@@ -50,4 +50,26 @@ export class UsuarioService {
         })
     }
 
+    async getPerfilProfessor(id:number){
+        const professor = await this.prismaService.usu_usuario.findUnique({where: {usu_id: id}});
+
+        if (!professor) {
+             throw new Error("Professor não encontrado");
+        }
+
+        return{
+            nome: professor?.usu_nome,
+            fotoUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=150",
+            status: professor?.usu_status,
+
+        }
+    }
+
+    async getAlunos(): Promise<usu_usuario[]> {
+        return this.prismaService.usu_usuario.findMany({
+            where: {
+                id_tipo_usuario: 4,
+            }
+        })
+    }
 }

@@ -13,6 +13,11 @@ export class AgendamentoController {
         return this.agendamentoService.findAllAgendamentos();
     }
 
+    @Get('today')
+    async findAgendamentoToday(): Promise<age_agendamento[]> {
+        return this.agendamentoService.findAgendamentoToday();
+    }
+
     @Post('register')
     async createQuadra(@Body() createAgendamentoDto: CreateAgendamentoDto) {
         return this.agendamentoService.createAgendamento(createAgendamentoDto);

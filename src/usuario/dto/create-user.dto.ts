@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MinLength, IsNumber, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, IsNumber, IsEnum, IsOptional } from 'class-validator';
 import { StatusUsuario } from '@prisma/client';
 
 export class CreateUserDto {
@@ -19,8 +19,8 @@ export class CreateUserDto {
     @MinLength(6)
     usu_senhaHash: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
     usu_cpf?: string;
 
     @IsEnum(StatusUsuario)

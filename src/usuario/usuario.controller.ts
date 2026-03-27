@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { usu_usuario } from '@prisma/client';
@@ -22,4 +22,14 @@ export class UsuarioController {
         return this.usuarioService.createUser(createUserDto)
     }
 
+    @Get('professor/:id')
+    async getPerfilProfessor(@Param('id') id: string) {
+        return this.usuarioService.getPerfilProfessor(Number(id));
+    }
+
+
+    @Get('alunos')
+    async getAlunos(): Promise<usu_usuario[]> {
+        return this.usuarioService.getAlunos();
+    }
 }

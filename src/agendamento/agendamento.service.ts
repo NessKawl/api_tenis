@@ -25,14 +25,22 @@ export class AgendamentoService {
         });
     }
 
-    // async buscaAgendamentoStatus(status: string) {
-    //     return this.prismaService.age_agendamento.findMany({
-    //         where: {
-    //             age_status: {
-    //                 contains: status,
-    //             }
-    //         }
-    //     })
-    // }
+   async findAgendamentoToday(): Promise<age_agendamento[]> {
+        const today = new Date();
+        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        return this.prismaService.age_agendamento.findMany({
+            where: {
+                age_data_inicio: {
+                    gte: startOfDay,
+                    lt: endOfDay
+                }
+            },
+            include: {
+                usuario: true,
+            }
+        });
+    }
+
 }
 
