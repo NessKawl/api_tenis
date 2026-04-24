@@ -27,9 +27,13 @@ export class UsuarioController {
         return this.usuarioService.getPerfilProfessor(Number(id));
     }
 
-
     @Get('alunos')
     async getAlunos(): Promise<usu_usuario[]> {
         return this.usuarioService.getAlunos();
+    }
+
+    @Post('register/aluno')
+    async createAluno(@Body() createUserDto: CreateUserDto) {
+        return this.usuarioService.createAluno(createUserDto);
     }
 }

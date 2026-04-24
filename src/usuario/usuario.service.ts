@@ -26,7 +26,7 @@ export class UsuarioService {
         return this.prismaService.usu_usuario.create({
             data: {
                 ...data,
-
+                id_tipo_usuario: 5,
                 usu_senhaHash: hashPassword
             }
         })
@@ -69,6 +69,28 @@ export class UsuarioService {
         return this.prismaService.usu_usuario.findMany({
             where: {
                 id_tipo_usuario: 4,
+            }
+        })
+    }
+
+    //para o aluno o tipo de usuário é 4, para o professor é 5
+    async createAluno(data: CreateUserDto): Promise<usu_usuario> {
+
+        const usuarioExistente = await this.prismaService.usu_usuario.findUnique({
+            where: { usu_email: data.usu_email }
+        }); 
+
+        if (usuarioExistente) {
+            throw new ConflictException('Usuário já cadastrado');
+        }   
+
+        const hashPassword = await bcrypt.hash(data.usu_senhaHash, 10);
+
+        return this.prismaService.usu_usuario.create({
+            data: {
+                ...data,
+                id_tipo_usuario: 4,
+                usu_senhaHash: hashPassword
             }
         })
     }
